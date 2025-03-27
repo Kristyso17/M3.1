@@ -9,16 +9,16 @@ def sign(m):
     # TODO create an account for signing the message
     account_object = w3.eth.account.create()  # Create an Eth account
     public_key = account_object.address  # Eth account public key
-    private_key = w3.to_hex(account_object.key)  # Eth account private key
-
+    private_key_str = w3.to_hex(account_object.key)  # Eth account private key
+    private_key = account_object.key
 
     assert private_key is not None
-    assert private_key.startswith("0x")
+    assert private_key_str.startswith("0x")
 
     print(f"Your wallet address is {public_key}")
 
     # TODO sign the given message "m"
-    message = encode_defunct(text="m")  # Encode the message
+    message = encode_defunct(text=m)  # Encode the message
     signed_message = w3.eth.account.sign_message(message, private_key=private_key)  # Sign the message
 
 
@@ -39,9 +39,9 @@ def verify(m, public_key, signed_message):
     w3 = Web3()
 
     # TODO verify the 'signed_message' is valid given the original message 'm' and the signers 'public_key'
-    message = m  # Encode the message
-    signer = 0  # Verify the message
-    valid_signature = 0  # True if message verifies, False if message does not verify
+    message = encode_defunct(text=m)  # Encode the message
+    signer = w3.eth.account.sign_message(message, private_key=private_key)  # Verify the message
+    valid_signature = signer == public_key  # True if message verifies, False if message does not verify
 
     assert isinstance(valid_signature, bool), "verify should return a boolean value"
     return valid_signature
