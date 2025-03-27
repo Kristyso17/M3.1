@@ -40,7 +40,7 @@ def verify(m, public_key, signed_message):
 
     # TODO verify the 'signed_message' is valid given the original message 'm' and the signers 'public_key'
     message = encode_defunct(text=m)  # Encode the message
-    signer = w3.eth.account.sign_message(message, private_key=private_key)  # Verify the message
+    signer = w3.eth.account.recover_message(message, signature=signed_message.signature)  # Verify the message
     valid_signature = signer == public_key  # True if message verifies, False if message does not verify
 
     assert isinstance(valid_signature, bool), "verify should return a boolean value"
